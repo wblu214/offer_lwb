@@ -43,6 +43,7 @@ public class ReverseLinkedList2 {
             c = d;
             d = e;
         }
+
         //最后将三段链表进行连接
         a.next = b;
         p.next = q;
