@@ -1,5 +1,8 @@
 package otherPractice.ManyThread;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Sushi {
@@ -7,6 +10,7 @@ public class Sushi {
     每位食客每秒吃掉一个寿司(不考虑吃饱的情况)，如果转盘上没有寿司就会休息10秒后再次尝试吃.请以面向对象的编程思想，抽象上面的内容为生产者消费者模式编码。
     要求使用多线程实现(可以用线程池，也可以不用*/
     //转盘的最大容量10
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmmss").withZone(ZoneId.systemDefault());
     public static void main(String[] args) throws InterruptedException {
         EnjoySpace enjoySpace = new EnjoySpace();
         Thread cook = new Cook(enjoySpace);
@@ -27,7 +31,7 @@ public class Sushi {
         public synchronized void make() throws InterruptedException {
             while(true){
                 if (curNum.get() >= plateMax){
-                    System.out.println("转盘上寿司满了,厨师休息10秒" + System.currentTimeMillis());
+                    System.out.println("转盘上寿司满了,厨师休息10秒，" + "当前时间："+formatter.format(Instant.now()));
                     this.wait(1000 * 10);
                 }else {
                     curNum.incrementAndGet();
@@ -38,7 +42,7 @@ public class Sushi {
 
         public synchronized void eat() throws InterruptedException {
             if (curNum.get() <= 0){
-                System.out.println("没有寿司了" + Thread.currentThread().getName()+ "休息10秒" + System.currentTimeMillis());
+                System.out.println("没有寿司了" + Thread.currentThread().getName()+ "休息10秒，" + "当前时间："+formatter.format(Instant.now()));
                 this.wait(1000 * 10);
             }else {
                 curNum.decrementAndGet();
